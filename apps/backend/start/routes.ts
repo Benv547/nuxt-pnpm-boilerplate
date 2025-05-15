@@ -9,7 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 const ExamplesController = () => import('#controllers/examples_controller')
-// import { middleware } from '#start/kernel'
+import { middleware } from '#start/kernel'
 
 // /examples
-router.get('examples/:id', [ExamplesController, 'me']) //.middleware(middleware.discordVerifyToken())
+router.get('examples', [ExamplesController, 'me']).middleware(middleware.auth())

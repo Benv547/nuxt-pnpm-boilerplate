@@ -18,6 +18,11 @@ export default await Env.create(new URL('../', import.meta.url), {
   HOST: Env.schema.string({ format: 'host' }),
   LOG_LEVEL: Env.schema.string(),
 
+  // JWT
+  KEYCLOAK_JWKS_URI: Env.schema.string(),
+  KEYCLOAK_ISSUER: Env.schema.string(),
+  KEYCLOAK_CLIENT_ID: Env.schema.string(),
+
   // Database
   DB_HOST: Env.schema.string({ format: 'host' }),
   DB_PORT: Env.schema.number(),

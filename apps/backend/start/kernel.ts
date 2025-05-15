@@ -39,5 +39,5 @@ router.use([() => import('@adonisjs/core/bodyparser_middleware')])
  * the routes or the routes group.
  */
 export const middleware = router.named({
-  discordVerifyToken: () => import('#middleware/discord_verify_token_middleware'),
+  auth: () => import('#middleware/auth_middleware'),
 })
