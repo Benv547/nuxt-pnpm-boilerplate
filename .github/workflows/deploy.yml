@@ -1,0 +1,41 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_SSH_HOST }}
+          username: ${{ secrets.VPS_SSH_USERNAME }}
+          key: ${{ secrets.VPS_SSH_SECRET }}
+          port: ${{ secrets.VPS_SSH_PORT }}
+          script: |
+            cd ${{ vars.PROJECT_PATH }}
+            git checkout main
+            git pull origin main
+            sudo docker build -t lexique547/bam-web-app .
+            sudo docker stop bam.web.app || true
+            sudo docker rm bam.web.app || true
+            sudo docker run -d --name bam.web.app -p 3333:3333 -p 3000:80 -p 3456:3456 -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e DB_DATABASE=${{ secrets.DB_DATABASE }} -e DB_USER=${{ secrets.DB_USER }} -e DB_PORT=${{ secrets.DB_PORT }} -e DB_HOST=${{ secrets.DB_HOST }} -e APP_URL=${{ vars.APP_URL }} -e APP_KEY=${{ secrets.APP_KEY }} lexique547/bam-web-app
+            
+            # Copy nginx/server.conf to sites-available/default and restart nginx
+            sudo cp nginx/server.conf /etc/nginx/sites-available/default
+            sudo systemctl restart nginx
+            
+            # Print docker logs for bam.web.app
+            sudo docker logs bam.web.app

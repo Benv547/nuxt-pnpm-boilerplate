@@ -1,0 +1,22 @@
+name: Purge Docker Images
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_SSH_HOST }}
+          username: ${{ secrets.VPS_SSH_USERNAME }}
+          key: ${{ secrets.VPS_SSH_SECRET }}
+          port: ${{ secrets.VPS_SSH_PORT }}
+          script: |
+            sudo docker image prune -f -a
+            sudo docker system prune -f --volumes

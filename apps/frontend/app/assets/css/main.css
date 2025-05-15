@@ -1,0 +1,18 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme static {
+  --font-simpleletter: "SimpleLetter";
+
+  --color-picton-blue-50: #f0f7fe;
+  --color-picton-blue-100: #dcedfd;
+  --color-picton-blue-200: #c1e0fc;
+  --color-picton-blue-300: #97cef9;
+  --color-picton-blue-400: #60b0f4;
+  --color-picton-blue-500: #4294ef;
+  --color-picton-blue-600: #2c77e4;
+  --color-picton-blue-700: #2461d1;
+  --color-picton-blue-800: #234faa;
+  --color-picton-blue-900: #224586;
+  --color-picton-blue-950: #192b52;
+}

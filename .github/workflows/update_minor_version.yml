@@ -1,0 +1,30 @@
+name: Update Minor Version (Develop)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update_minor_version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+          token: ${{ secrets.REPO_TOKEN }}
+
+      - name: Set up Git
+        run: git config --global user.name "GitHub Actions" && git config --global user.email "actions@github.com"
+
+      - name: Bump version (minor)
+        run: |
+          version=$(awk -F: '/"version"/{gsub(/[",]/, "", $2); print $2}' package.json)
+          major=$(echo $version | cut -d. -f1)
+          minor=$(echo $version | cut -d. -f2)
+          new_minor=$((minor + 1))
+          new_version=$major.$new_minor.0
+          sed -i "s/\"version\": \".*\"/\"version\": \"$new_version\"/" package.json
+          git add package.json
+          git commit -m "Bump version to $new_version (minor)"
+          git push
